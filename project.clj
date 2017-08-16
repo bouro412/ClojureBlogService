@@ -15,6 +15,7 @@
   :plugins [[lein-environ "1.0.1"]]
   :uberjar-name "blog.jar"
   :min-lein-version "2.5.3"
+  :main blog.core
   :profiles
   {:dev {:dependencies [[prone "0.8.2"]]
          :env {:dev true

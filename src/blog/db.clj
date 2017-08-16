@@ -1,3 +1,4 @@
 (ns blog.db
-  (:require [clojure.java.jdbc :as jdbc]
-            [environ.core :refer [env]]))
+  (:require [environ.core :refer [env]]))
+
+(def db-spec (:db env))

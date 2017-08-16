@@ -19,7 +19,7 @@
          [:post "/login"]
          (anti-forgery-field)
          (error-messages req)
-         [:input {:name :address :value ""
+         [:input {:name :mail :value ""
                   :placeholder "メールアドレス"}]
          "<br>"
          [:input {:name :password :value ""
