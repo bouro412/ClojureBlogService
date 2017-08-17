@@ -8,7 +8,7 @@
 (defn login-user [mail pass]
   (let [user (first (jdbc/query db/db-spec ["select * from users where mail = ?" mail]))]
     ;; TODO: passwordの復号処理
-    (if (= (user :password) pass)
+    (if (= (:password user) pass)
       user)))
 
 

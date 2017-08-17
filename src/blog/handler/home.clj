@@ -29,13 +29,13 @@
   (uv/with-fallback #(login (assoc req :errors %))
     (let [params (uv/validate params {:mail [[v/required :message "メールアドレスを入力してください"]]
                                       :password [[v/required :message "パスワードを入力してください"]]})]
-      ;; TODO: login失敗後の処理
       (if-let [user (user/login-user (:mail params) (:password params))]
         (let [cookie "cookie"] ;; TODO: cookieを生成する処理の実装
           ;; TODO: cookieをdbに登録する処理
           (-> (res/redirect "/") ;; TODO: login後に飛ぶページの作成
               (assoc-in [:cookie "session_id"] {:value cookie :secure true :maxage 3600})
-              html))))))
+              html))
+        (login (assoc req :errors {:msg ["メールアドレスとパスワードの組み合わせが間違っています。"]}))))))
 
 (defroutes home-routes
   (GET "/" _ home)
