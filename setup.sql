@@ -12,7 +12,7 @@ create table users(
 );
 
 create table cookies(
-  uid serial,
+  user_id int,
   cookie varchar(100) unique,
   primary key(uid)
 );

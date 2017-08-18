@@ -1,6 +1,7 @@
 (ns blog.middleware
   (:require [environ.core :refer [env]]
-            [ring.middleware.defaults :as defaults]))
+            [ring.middleware.defaults :as defaults]
+            [ring.middleware.session.cookie :as cookie]))
 
 (def ^:private wrap #'defaults/wrap)
 
@@ -22,6 +23,9 @@
       (throw (RuntimeException. "Middleware requires ring/ring-devel and prone;")))))
 
 (defn middleware-set [handler]
-  (-> handler
-      (wrap wrap-dev (:dev env))
-      (defaults/wrap-defaults defaults/site-defaults)))
+  (let [config (-> defaults/site-defaults
+                   (assoc-in [:session :cookie-attrs :max-age] 3600)
+                   (assoc-in [:session :store] (cookie/cookie-store)))]
+    (-> handler
+        (wrap wrap-dev (:dev env))
+        (defaults/wrap-defaults config))))

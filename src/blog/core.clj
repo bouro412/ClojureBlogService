@@ -2,8 +2,6 @@
   (:require [compojure.core :refer [routes]]
             [ring.adapter.jetty :as server]
             [blog.handler.home :as home]
-       ;     [blog.handler.main :refer [main-routes]]
-       ;     [todo-clj.handler.todo :refer [todo-routes]]
             [blog.middleware :refer [middleware-set wrap-dev]]))
 
 (defonce server (atom nil))
