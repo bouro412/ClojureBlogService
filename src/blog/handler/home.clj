@@ -30,10 +30,9 @@
     (let [params (uv/validate params {:mail [[v/required :message "メールアドレスを入力してください"]]
                                       :password [[v/required :message "パスワードを入力してください"]]})]
       (if-let [user (user/login-user (:mail params) (:password params))]
-        (let [cookie "cookie"] ;; TODO: cookieを生成する処理の実装
-          ;; TODO: cookieをdbに登録する処理
+        (let [cookie user] 
           (-> (res/redirect "/") ;; TODO: login後に飛ぶページの作成
-              (assoc-in [:cookie "session_id"] {:value cookie :secure true :maxage 3600})
+              (update :session #(assoc % :login-user cookie))
               html))
         (login (assoc req :errors {:msg ["メールアドレスとパスワードの組み合わせが間違っています。"]}))))))
 

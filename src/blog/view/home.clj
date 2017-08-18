@@ -4,9 +4,11 @@
             [hiccup.form :as hf]
             [blog.view.util :refer [error-messages]]))
 
-(defn home-view [req]
+(defn home-view [{:as req :keys [session]}]
   (->> [:section.card
         [:h2 "ホーム画面"]
+        (if-let [user (:login-user session)]
+          [:h3 (str "こんにちは" (:name user))])
         [:a {:href "/login"} "ログインする"]
         "<br>"
         [:a {:href "/register"} "登録する"]]
