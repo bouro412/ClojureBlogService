@@ -2,13 +2,19 @@
   (:require [clojure.java.jdbc :as jdbc]
             [blog.db :as db]))
 
-(defn register-user [name mail password]
-  (jdbc/insert! db/db-spec :users {:name name :mail mail :password password}))
+(def table :users)
 
-(defn login-user [mail pass]
-  (let [user (first (jdbc/query db/db-spec ["select * from users where mail = ?" mail]))]
-    ;; TODO: passwordの復号処理
-    (if (= (:password user) pass)
-      user)))
+(defn register-user [user-id name mail password]
+  (jdbc/insert! db/db-spec table {:name name :mail mail :password password :user_id user-id}))
 
+(defn get-users [& {:as columns}]
+  (db/query table columns))
 
+(defn search-user [mail pass]
+  ;; TODO: passwordの復号処理
+  (let [users (get-users :mail mail :pass pass)]
+    (if (= (count users) 1)
+      (first users))))
+
+  
+    

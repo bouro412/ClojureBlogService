@@ -1,3 +1,4 @@
+
 drop table users;
 drop table cookies;
 drop table articles;
@@ -5,6 +6,7 @@ drop table comments;
 
 create table users(
   uid serial,
+  user_id varchar(20) unique,
   name varchar(20),
   mail varchar(80) unique,
   password varchar(30),
@@ -14,13 +16,14 @@ create table users(
 create table cookies(
   user_id int,
   cookie varchar(100) unique,
-  primary key(uid)
+  primary key(user_id)
 );
 
 create table articles(
   uid serial,
   owner_id int,
   article text,
+  title varchar(200),
   date timestamp,
   primary key(uid)
 );
@@ -34,5 +37,7 @@ create table comments(
   date timestamp
 );
 
-insert into users (name, mail, password)
-       values ('テストちゃん', 'test@test.com', 'testpass');
+insert into users (user_id, name, mail, password)
+       values ('test', 'テストちゃん', 'test@test.com', 'testpass');
+insert into users (user_id, name, mail, password)
+       values ('tanaka', 'なかくん', 'tanaka@gmail.com', 'tanakapass');

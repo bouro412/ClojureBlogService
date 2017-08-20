@@ -4,11 +4,10 @@
             [ring.util.response :as res]
             [blog.view.home :as view]
             [blog.util.validation :as uv]
+            [blog.handler.util :refer [html]]
             [blog.db.user :as user]
-            [bouncer.validators :as v]))
-
-(defn html [res]
-  (res/content-type res "text/html; charset=utf-8"))
+            [bouncer.validators :as v]
+            [blog.util.login :as login]))
 
 (defn home [req]
   (-> (view/home-view req)
@@ -29,11 +28,10 @@
   (uv/with-fallback #(login (assoc req :errors %))
     (let [params (uv/validate params {:mail [[v/required :message "メールアドレスを入力してください"]]
                                       :password [[v/required :message "パスワードを入力してください"]]})]
-      (if-let [user (user/login-user (:mail params) (:password params))]
-        (let [cookie user] 
-          (-> (res/redirect "/") ;; TODO: login後に飛ぶページの作成
-              (update :session #(assoc % :login-user cookie))
-              html))
+      (if-let [user (user/search-user (:mail params) (:password params))]
+        (-> (res/redirect "/") ;; TODO: login後に飛ぶページの作成
+            (login/update-user user)
+            html)
         (login (assoc req :errors {:msg ["メールアドレスとパスワードの組み合わせが間違っています。"]}))))))
 
 (defroutes home-routes

@@ -1,2 +1,0 @@
-(ns blog.db.cookie)
-
