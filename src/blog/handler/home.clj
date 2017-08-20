@@ -6,13 +6,17 @@
             [blog.util.validation :as uv]
             [blog.handler.util :refer [html]]
             [blog.db.user :as user]
+            [blog.util.login :refer [login? login-user]]
             [bouncer.validators :as v]
             [blog.util.login :as login]))
 
 (defn home [req]
-  (-> (view/home-view req)
-      res/response
-      html))
+  (if (login? req)
+    (-> (res/redirect (str "/user/" (:user_id (login-user req))))
+        html)
+    (-> (view/home-view req)
+        res/response
+        html)))
 
 (defn login [req]
   (-> (view/login-view req)
