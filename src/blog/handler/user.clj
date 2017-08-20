@@ -1,18 +1,19 @@
-(ns blog.handler.uesr
+(ns blog.handler.user
   (:require [compojure.core :refer [defroutes context GET POST]]
             [compojure.route :as route]
-            [blog.view.home :as view]
+            [blog.view.user :as view]
             [blog.handler.util :refer [html]]
             [ring.util.response :as res]))
 
-#_(defn user-home [{:as req :keys [params]}]
-  (-> (view/user-home-view)
+(defn user-home [{:as req :keys [params]}]
+  (-> (view/user-home-view req)
       (res/response)
       html))
 
-#_(defroutes user-routes
+(defroutes user-routes
   (context "/user/:user-id" _
            (GET "/" _ user-home)
-           (GET "/:article-id" _ article-show)
-           (GET "/edit" _ edit)))
+           ;(GET "/:article-id" _ article-show)
+           ;(GET "/edit" _ edit)
+           ))
 

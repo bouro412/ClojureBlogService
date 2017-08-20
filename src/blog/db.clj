@@ -15,4 +15,4 @@
         (map val query-map))))
 
 (defn query [table column+vals]
-  (jdbc/query db-spec table column+vals))
+  (jdbc/query db-spec (make-query table column+vals)))

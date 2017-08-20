@@ -2,13 +2,15 @@
   (:require [compojure.core :refer [routes]]
             [ring.adapter.jetty :as server]
             [blog.handler.home :as home]
+            [blog.handler.user :as user]
             [blog.middleware :refer [middleware-set wrap-dev]]))
 
 (defonce server (atom nil))
 
 (def app
   (-> (routes
-       home/home-routes)
+       home/home-routes
+       user/user-routes)
       wrap-dev
       middleware-set
       ))
