@@ -41,3 +41,7 @@ insert into users (user_id, name, mail, password)
        values ('test', 'テストちゃん', 'test@test.com', 'testpass');
 insert into users (user_id, name, mail, password)
        values ('tanaka', 'なかくん', 'tanaka@gmail.com', 'tanakapass');
+
+insert into articles (owner_id, title, article)
+       values (1, '打ち上げ花火 映画で見るか 小説読むか',
+              '小説で読みました。<br>ちょっと設定が微妙というかちゃんと考えられてるか怪しいと思いました。');
