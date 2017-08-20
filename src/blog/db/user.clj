@@ -12,7 +12,7 @@
 
 (defn search-user [mail pass]
   ;; TODO: passwordの復号処理
-  (let [users (get-users :mail mail :pass pass)]
+  (let [users (get-users :mail mail :password pass)]
     (if (= (count users) 1)
       (first users))))
 

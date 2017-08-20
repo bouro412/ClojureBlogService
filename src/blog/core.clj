@@ -10,7 +10,8 @@
 (def app
   (-> (routes
        home/home-routes
-       user/user-routes)
+       user/user-routes
+       user/edit-routes)
       wrap-dev
       middleware-set
       ))

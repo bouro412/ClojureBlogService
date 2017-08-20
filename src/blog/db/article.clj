@@ -1,6 +1,7 @@
 (ns blog.db.article
   (:require [clojure.java.jdbc :as jdbc]
-            [blog.db :as db]))
+            [blog.db :as db]
+            [blog.db.user :as user]))
 
 (def table :articles)
 
@@ -14,4 +15,10 @@
 (defn get-articles [& {:as column+vals}]
   (db/query table column+vals))
 
+(defn article-author [& {:as column+vals}]
+  (first
+   (user/get-users :uid
+                   (-> (db/query table column+vals)
+                       first
+                       :owner_id))))
 

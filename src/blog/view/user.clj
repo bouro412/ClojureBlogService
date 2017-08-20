@@ -26,16 +26,21 @@
         [:h2 (:title article)]
         [:div (:article article)]
         #_(when (= (get-in req [:session :user_id])
-                 (get-in req [:params :user-id]))
-          (let [id ]
-          [:div
-           "<br>"
-           [:a.wide-link {:href "/user/edit/?article="}
-            "編集する"]
-           [:a.wide-link {:href "/user/edit/delete/?article="}
-            "削除する"]]))        
+                   (get-in req [:params :user-id]))
+            (let [id ]
+              [:div
+               "<br>"
+               [:a.wide-link {:href "/user/edit/?article="}
+                "編集する"]
+               [:a.wide-link {:href "/user/edit/delete/?article="}
+                "削除する"]]))
         [:a {:href (str "/user/" author-id)}
          "戻る"]]
+       (layout/common req)))
+
+(defn edit-view [{:as req :keys [params]} article-uid user-id]
+  (->> [:section.card
+        [:h2 "記事編集画面"]]
        (layout/common req)))
 
 
