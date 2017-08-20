@@ -3,12 +3,16 @@
             [compojure.route :as route]
             [blog.view.user :as view]
             [blog.handler.util :refer [html]]
+            [blog.db.user :refer [get-users]]
             [ring.util.response :as res]))
 
 (defn user-home [{:as req :keys [params]}]
-  (-> (view/user-home-view req)
-      (res/response)
-      html))
+  (if-let [author (first (get-users :user_id (:user-id params)))]
+    (-> (view/user-home-view req author)
+        (res/response)
+        html)
+    (res/not-found (format "user %s is not found."
+                           (:user-id params)))))
 
 (defroutes user-routes
   (context "/user/:user-id" _
