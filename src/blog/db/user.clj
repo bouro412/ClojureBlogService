@@ -16,5 +16,7 @@
     (if (= (count users) 1)
       (first users))))
 
+(defn id->uid [user-id]
+  (:uid (first (get-users :user_id user-id))))
   
     
