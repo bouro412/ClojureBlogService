@@ -25,7 +25,7 @@
 (defn middleware-set [handler]
   (let [config (-> defaults/site-defaults
                    (assoc-in [:session :cookie-attrs :max-age] 3600)
-                   (assoc-in [:session :store] (cookie/cookie-store)))]
+                   (assoc-in [:session :store] (cookie/cookie-store "asduygkwpedyi3")))]
     (-> handler
         (wrap wrap-dev (:dev env))
         (defaults/wrap-defaults config))))

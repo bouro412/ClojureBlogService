@@ -15,12 +15,10 @@
     (:title article)]
    (let [user (login-user req)]
      (when (= (:uid author) (:uid user))
-       (list ;"<br>"
-             [:a.wide-link {:href (format "/edit/%s/%s"
+       (list [:a.wide-link {:href (format "/edit/%s/%s"
                                 (:user_id author)
                                 (:uid article))}
               "編集する"]
-;             "<br>"
              [:a.wide-link {:href (format "/delete/%s/%s"
                                 (:user_id author)
                                 (:uid article))}
@@ -55,9 +53,6 @@
          "戻る"]]
        (layout/common req)))
 
-(defn edit-view [{:as req :keys [params]} article-uid user-id]
-  (->> [:section.card
-        [:h2 "記事編集画面"]]
-       (layout/common req)))
+
 
 

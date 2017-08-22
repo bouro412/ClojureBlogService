@@ -25,25 +25,9 @@
         html)
     (res/not-found "article is not found")))
 
-(defn edit [{:as req :keys [params]} user-id article-uid]
-  (let [author-id (:user_id (article-author :uid article-uid))
-        logined-user-id (:user_id (login-user req))]
-    (if (= user-id logined-user-id author-id)
-      (-> (view/edit-view req article-uid user-id)
-          (res/response)
-          html)
-      (res/not-found "article is not found"))))
-
 (defroutes user-routes
   (context "/user/:user-id" [user-id]
            (GET "/" [:as req] (user-home req user-id))
            (GET ["/:article-id" :article-id #"[0-9]+"]
                 [article-id :<< as-int :as req]
                 (article-show req user-id article-id))))
-
-(defroutes edit-routes
-;  (GET "/edit/:user-id" _ edit-new)
-  (GET "/edit/:user-id/:article-id{[0-9]+}"
-       [user-id article-id :<< as-int :as req]
-       (edit req user-id article-id)))
-

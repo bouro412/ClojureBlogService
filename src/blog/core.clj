@@ -3,6 +3,7 @@
             [ring.adapter.jetty :as server]
             [blog.handler.home :as home]
             [blog.handler.user :as user]
+            [blog.handler.edit :as edit]
             [blog.middleware :refer [middleware-set wrap-dev]]))
 
 (defonce server (atom nil))
@@ -11,7 +12,7 @@
   (-> (routes
        home/home-routes
        user/user-routes
-       user/edit-routes)
+       edit/edit-routes)
       wrap-dev
       middleware-set
       ))
