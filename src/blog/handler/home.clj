@@ -38,8 +38,13 @@
             html)
         (login (assoc req :errors {:msg ["メールアドレスとパスワードの組み合わせが間違っています。"]}))))))
 
+(defn logout [{:as req :keys [params]}]
+  (-> (res/redirect "/")
+      (assoc :session nil)))
+
 (defroutes home-routes
   (GET "/" _ home)
   (GET "/login" _ login)
   (POST "/login" _ login-post)
-  (GET "/register" _ register))
+  (GET "/register" _ register)
+  (GET "/logout" _ logout))
