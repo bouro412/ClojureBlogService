@@ -3,9 +3,28 @@
             [blog.view.util :refer [error-messages]]
             [hiccup.form :as hf]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
-            [blog.util.login :as login]
+            [blog.util.login :refer [login-user]]
             [blog.db.user :as user]
             [blog.db.article :as article]))
+
+(defn article-select-view [req author article]
+  [:li
+   [:a {:href (format "/user/%s/%s"
+                      (:user_id author)
+                      (:uid article))}
+    (:title article)]
+   (let [user (login-user req)]
+     (when (= (:uid author) (:uid user))
+       (list ;"<br>"
+             [:a.wide-link {:href (format "/edit/%s/%s"
+                                (:user_id author)
+                                (:uid article))}
+              "編集する"]
+;             "<br>"
+             [:a.wide-link {:href (format "/delete/%s/%s"
+                                (:user_id author)
+                                (:uid article))}
+              "削除する"])))])
 
 (defn user-home-view [{:as req :keys [params]} author]
   (->> [:section.card
@@ -14,26 +33,24 @@
          (->> (article/get-articles :owner_id (:uid author))
               (sort-by :uid >)
               (take 20) ;; TODO: 取得件数の管理
-              (map (fn [article]
-                     [:li [:a {:href (format "/user/%s/%s"
-                                             (:user_id author)
-                                             (:uid article))}
-                           (:title article)]])))]]
+              (map #(article-select-view req author %)))]]
        (layout/common req)))
 
 (defn article-view [req article author-id]
   (->> [:section.card
         [:h2 (:title article)]
         [:div (:article article)]
-        #_(when (= (get-in req [:session :user_id])
-                   (get-in req [:params :user-id]))
-            (let [id ]
-              [:div
-               "<br>"
-               [:a.wide-link {:href "/user/edit/?article="}
-                "編集する"]
-               [:a.wide-link {:href "/user/edit/delete/?article="}
-                "削除する"]]))
+        (when (= (:user_id (login-user req)) author-id)
+          [:div
+           "<br>"
+           [:a.wide-link {:href (format "/edit/%s/%s"
+                                        author-id
+                                        (:uid article))}
+            "編集する"]
+           [:a.wide-link {:href (format "/delete/%s/%s"
+                                        author-id
+                                        (:uid article))}
+            "削除する"]])
         [:a {:href (str "/user/" author-id)}
          "戻る"]]
        (layout/common req)))
