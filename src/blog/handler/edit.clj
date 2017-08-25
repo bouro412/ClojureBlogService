@@ -5,7 +5,11 @@
             [blog.view.edit :as view]
             [blog.handler.util :refer [html]]
             [blog.db.user :refer [get-users id->uid]]
-            [blog.db.article :refer [get-articles article-author update-article]]
+            [blog.db.article :refer [get-articles
+                                     article-author
+                                     update-article
+                                     add-article
+                                     delete-article]]
             [blog.util.login :refer [login-user login?]]
             [ring.util.response :as res]))
 
@@ -30,8 +34,13 @@
         html)
     (res/not-found "page not found")))
 
+(defn edit-new-post [{:as req :keys [params]} user-id]
+  (add-article (id->uid user-id) (:title params) (:article params))
+  (res/redirect (str "/user/" user-id)))
+
 (defroutes edit-routes
   (GET "/edit/:user-id" [user-id :as req] (edit-new req user-id))
+  (POST "/edit/:user-id" [user-id :as req] (edit-new-post req user-id))
   (GET "/edit/:user-id/:article-id{[0-9]+}"
        [user-id article-id :<< as-int :as req]
        (edit req user-id article-id))

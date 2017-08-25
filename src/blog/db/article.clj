@@ -25,6 +25,11 @@
                  :date (time-stamp)}
                 ["uid = ?" uid]))
 
+(defn delete-article [uid]
+  (jdbc/delete! db/db-spec
+                table
+                ["uid = ?" uid]))
+
 (defn get-articles [& {:as column+vals}]
   (db/query table column+vals))
 

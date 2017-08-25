@@ -23,4 +23,16 @@
            [:button.bg-blue "更新する"])]
          (layout/common req))))
 
-(defn edit-new-view [req user-id])
+(defn edit-new-view [req user-id]
+  (->> [:section.card
+        [:h2 "新規記事作成"]
+        (hf/form-to
+         [:post (format "/edit/%s" user-id)]
+         (anti-forgery-field)
+         (error-messages req)
+         [:input {:type :text :name :title :size 60}]
+         "<br>"
+         [:textarea {:name :article :rows 10 :cols 60}]
+         "<br>"
+         [:button.bg-blue "投稿する"])]
+       (layout/common req)))

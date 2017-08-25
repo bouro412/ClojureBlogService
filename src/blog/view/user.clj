@@ -3,7 +3,7 @@
             [blog.view.util :refer [error-messages]]
             [hiccup.form :as hf]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
-            [blog.util.login :refer [login-user]]
+            [blog.util.login :refer [login-user login?]]
             [blog.db.user :as user]
             [blog.db.article :as article]))
 
@@ -31,7 +31,9 @@
          (->> (article/get-articles :owner_id (:uid author))
               (sort-by :uid >)
               (take 20) ;; TODO: 取得件数の管理
-              (map #(article-select-view req author %)))]]
+              (map #(article-select-view req author %)))]        
+        (when (login? req :uid (:uid author))
+          [:a.wide-link {:href (str "/edit/" (:user_id author))} "新規記事の作成"])]
        (layout/common req)))
 
 (defn article-view [req article author-id]
