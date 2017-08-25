@@ -8,7 +8,9 @@
             [blog.db.article :refer [get-articles article-author]]
             [blog.util.login :refer [login-user]]
             [ring.util.response :as res]
-            [blog.util.validation :as uv]))
+            [blog.util.validation :as uv]
+            [bouncer.validators :as v]
+            [blog.db.comment :as comment]))
 
 (defn user-home [{:as req :keys [params]} user-id]
   (if-let [author (first (get-users :user_id user-id))]
@@ -31,8 +33,19 @@
       (res/response)
       html))
 
-(defn comment-post [req user-id article-uid]
-  )
+(def comment-validate-map
+  {:title [[v/required :message "タイトルを入力してください"]]
+   :name [[v/required :message "名前を入力してください"]]
+   :content [[v/required :message "本文を入力してください"]]})
+
+(defn comment-post
+  [{:as req :keys [params]} user-id article-uid]
+  (uv/with-fallback #(comment-show (assoc req :errors %)
+                                   user-id article-uid)
+    (let [{:keys [title name content]}
+          (uv/validate params comment-validate-map)]
+      (comment/add-comment article-uid title name content)
+      (res/redirect "comment"))))
 
 (defroutes user-routes
   (context "/user/:user-id" [user-id]

@@ -69,5 +69,16 @@
         [:ul
          (->> (comment/get-comments article-id)
               (sort-by :id)
-              (map comment-view))]]
+              (map comment-view))]
+        (hf/form-to
+         [:post "comment"]
+         (anti-forgery-field)
+         (error-messages req)
+         [:input {:type :text :name :name} "名前"]
+         "<br>"
+         [:input {:type :text :name :title} "タイトル"]
+         "<br>"
+         [:textarea {:name :content :rows 10 :cols 30}]
+         "<br>"
+         [:button.bg-blue "投稿する"])]
        (layout/common req)))
