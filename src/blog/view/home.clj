@@ -38,10 +38,13 @@
          [:post "/register"]
          (anti-forgery-field)
          (error-messages req)
+         [:input {:name :user-id :value ""
+                  :placeholder "ユーザーID"}]
+         "<br>"
          [:input {:name :name :value ""
                   :placeholder "ニックネーム"}]
          "<br>"
-         [:input {:name :address :value ""
+         [:input {:name :mail :value ""
                   :placeholder "メールアドレス"}]
          "<br>"
          [:input {:name :password :value ""

@@ -28,12 +28,25 @@
       res/response
       html))
 
+(def user-validate-map
+  {:name [[v/required :message "名前を入力してください"]]
+   :user-id [[v/required :message "IDを入力してください"]]
+   :mail [[v/required :message "メールアドレスを入力してください"]]
+   :password [[v/required :message "パスワードを入力してください"]]})
+
+(defn register-post [{:as req :keys [params]}]
+  (uv/with-fallback #(register (assoc req :errors %))
+    (let [{:keys [name user-id mail password]}
+          (uv/validate params  user-validate-map)]
+      (user/register-user user-id name mail password)
+      (res/redirect "/"))))
+
 (defn login-post [{:as req :keys [params]}]
   (uv/with-fallback #(login (assoc req :errors %))
-    (let [params (uv/validate params {:mail [[v/required :message "メールアドレスを入力してください"]]
-                                      :password [[v/required :message "パスワードを入力してください"]]})]
-      (if-let [user (user/search-user (:mail params) (:password params))]
-        (-> (res/redirect "/") ;; TODO: login後に飛ぶページの作成
+    (let [{:keys [mail password]}
+          (uv/validate params (dissoc user-validate-map :name :user-id))]
+      (if-let [user (user/search-user mail password)]
+        (-> (res/redirect "/")
             (login/update-user user)
             html)
         (login (assoc req :errors {:msg ["メールアドレスとパスワードの組み合わせが間違っています。"]}))))))
@@ -47,4 +60,5 @@
   (GET "/login" _ login)
   (POST "/login" _ login-post)
   (GET "/register" _ register)
+  (POST "/register" _ register-post)
   (GET "/logout" _ logout))
