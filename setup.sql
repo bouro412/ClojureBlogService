@@ -13,12 +13,6 @@ create table users(
   primary key(uid)
 );
 
-create table cookies(
-  user_id int,
-  cookie varchar(100) unique,
-  primary key(user_id)
-);
-
 create table articles(
   uid serial,
   owner_id int,

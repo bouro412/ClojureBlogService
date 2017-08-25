@@ -7,7 +7,8 @@
             [blog.db.user :refer [get-users id->uid]]
             [blog.db.article :refer [get-articles article-author]]
             [blog.util.login :refer [login-user]]
-            [ring.util.response :as res]))
+            [ring.util.response :as res]
+            [blog.util.validation :as uv]))
 
 (defn user-home [{:as req :keys [params]} user-id]
   (if-let [author (first (get-users :user_id user-id))]
@@ -25,9 +26,23 @@
         html)
     (res/not-found "article is not found")))
 
+(defn comment-show [req user-id article-uid]
+  (-> (view/comment-list-view req user-id article-uid)
+      (res/response)
+      html))
+
+(defn comment-post [req user-id article-uid]
+  )
+
 (defroutes user-routes
   (context "/user/:user-id" [user-id]
            (GET "/" [:as req] (user-home req user-id))
            (GET ["/:article-id" :article-id #"[0-9]+"]
                 [article-id :<< as-int :as req]
-                (article-show req user-id article-id))))
+                (article-show req user-id article-id))
+           (GET "/:article-id{[0-9]+}/comment"
+                [article-id :<< as-int :as req]
+                (comment-show req user-id article-id))
+           (POST "/:article-id{[0-9]+}/comment"
+                 [article-id :<< as-int :as req]
+                 (comment-post req user-id article-id))))
