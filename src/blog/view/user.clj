@@ -19,9 +19,9 @@
                                 (:user_id author)
                                 (:uid article))}
               "編集する"]
-             [:a.wide-link {:href (format "/delete/%s/%s"
-                                (:user_id author)
-                                (:uid article))}
+             [:a.wide-link {:href (format "/edit/delete/%s/%s"
+                                          (:user_id author)
+                                          (:uid article))}
               "削除する"])))])
 
 (defn user-home-view [{:as req :keys [params]} author]
@@ -47,14 +47,11 @@
                                         author-id
                                         (:uid article))}
             "編集する"]
-           [:a.wide-link {:href (format "/delete/%s/%s"
-                                        author-id
-                                        (:uid article))}
+           
+           [:a.wide-link {:href (format "/edit/delete/%s/%s"
+                              author-id
+                              (:uid article))}
             "削除する"]])
         [:a {:href (str "/user/" author-id)}
          "戻る"]]
        (layout/common req)))
-
-
-
-

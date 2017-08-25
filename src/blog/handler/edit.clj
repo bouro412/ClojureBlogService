@@ -1,5 +1,5 @@
 (ns blog.handler.edit
-  (:require [compojure.core :refer [defroutes context GET POST]]
+  (:require [compojure.core :refer [defroutes context GET POST DELETE]]
             [compojure.route :as route]
             [compojure.coercions :refer [as-int]]
             [blog.view.edit :as view]
@@ -12,7 +12,6 @@
                                      delete-article]]
             [blog.util.login :refer [login-user login?]]
             [ring.util.response :as res]))
-
 
 (defn edit [{:as req :keys [params]} user-id article-uid]
   (let [author-id (:user_id (article-author :uid article-uid))
@@ -38,6 +37,11 @@
   (add-article (id->uid user-id) (:title params) (:article params))
   (res/redirect (str "/user/" user-id)))
 
+(defn edit-delete [req user-id article-uid]
+  (if (login? req :user_id user-id)
+    (do (delete-article article-uid)
+        (res/redirect (str "/user/" user-id)))))
+
 (defroutes edit-routes
   (GET "/edit/:user-id" [user-id :as req] (edit-new req user-id))
   (POST "/edit/:user-id" [user-id :as req] (edit-new-post req user-id))
@@ -46,4 +50,7 @@
        (edit req user-id article-id))
   (POST "/edit/:user-id/:article-id{[0-9]+}"
         [user-id article-id :<< as-int :as req]
-        (edit-post req user-id article-id)))
+        (edit-post req user-id article-id))
+  (GET "/edit/delete/:user-id/:article-id{[0-9]+}"
+          [user-id article-id :<< as-int :as req]
+          (edit-delete req user-id article-id)))
