@@ -12,7 +12,7 @@
     (->> [:section.card
           [:h2 "記事編集"]
           (hf/form-to
-           [:post (format "edit/%s/%s" user-id article-uid)]
+           [:post (format "/edit/%s/%s" user-id article-uid)]
            (anti-forgery-field)
            (error-messages req)
            [:input {:type :text :name :title :value (:title article) :size 60}]
